@@ -1,0 +1,28 @@
+{
+  "name": "shuntaka-dev",
+  "version": "0.1.0",
+  "scripts": {
+    "lint": "pnpm run /lint:.*/",
+    "lint:ws": "pnpm --recursive --if-present lint",
+    "lint:check": "biome check .",
+    "lint:spell": "cspell lint . --cache --gitignore",
+    "fix": "pnpm run /fix:.*/",
+    "fix:ws": "pnpm --recursive --if-present fix",
+    "fix:root": "biome check . --write",
+    "dev": "pnpm --recursive --if-present dev"
+  },
+  "packageManager": "pnpm@9.4.0",
+  "engines": {
+    "npm": "use pnpm please❤️ ",
+    "yarn": "use pnpm please❤️ ",
+    "pnpm": ">=9.4.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "@dotenvx/dotenvx": "1.5.0",
+    "aws-cdk": "2.127.0",
+    "cspell": "8.9.1",
+    "tsx": "4.16.0",
+    "typescript": "5.5.2"
+  }
+}

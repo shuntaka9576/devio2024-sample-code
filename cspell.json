@@ -1,0 +1,50 @@
+{
+  "words": [
+    "shuntaka",
+    "devio",
+    "testcontainers",
+    "dotenvx",
+    "localstack",
+    "hoge"
+  ],
+  "ignorePaths": ["./packages/iac/test/__snapshots__", "pnpm-lock.yaml"],
+  "ignoreWords": [
+    "iakoz",
+    "millis",
+    "oecvw",
+    "apig",
+    "asse",
+    "autowidth",
+    "rrk",
+    "shadcn",
+    "signup"
+  ],
+  "languageSettings": [
+    {
+      "languageId": "*",
+      "dictionaries": ["adoc", "aws", "node", "frontend"],
+      "dictionaryDefinitions": [
+        {
+          "name": "adoc",
+          "path": "./.cspell/adoc.txt",
+          "addWords": false
+        },
+        {
+          "name": "aws",
+          "path": "./.cspell/aws.txt",
+          "addWords": false
+        },
+        {
+          "name": "node",
+          "path": "./.cspell/node.txt",
+          "addWords": false
+        },
+        {
+          "name": "frontend",
+          "path": "./.cspell/frontend.txt",
+          "addWords": false
+        }
+      ]
+    }
+  ]
+}

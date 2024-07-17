@@ -1,0 +1,37 @@
+{
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "es5"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noExcessiveNestedTestSuites": {
+          "level": "off"
+        },
+        "noUselessSwitchCase": {
+          "level": "error"
+        }
+      },
+      "suspicious": {
+        "noConsoleLog": "warn"
+      },
+      "correctness": {
+        "noUnusedVariables": {
+          "level": "error"
+        },
+        "noUnusedImports": {
+          "level": "error"
+        }
+      }
+    }
+  }
+}

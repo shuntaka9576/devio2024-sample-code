@@ -1,0 +1,6 @@
+{
+  "extends": ["../config/biome-config/biome.jsonc"],
+  "files": {
+    "ignore": [".next"]
+  }
+}

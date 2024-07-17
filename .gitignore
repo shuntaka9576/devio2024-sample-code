@@ -1,0 +1,22 @@
+# typescript
+node_modules
+cdk.out
+tsconfig.tsbuildinfo
+*.d.ts
+*.d.mts
+*.mjs
+*.js
+!packages/blog-web/next.config.js
+!packages/blog-web/postcss.config.js
+
+# python
+*.egg-info/
+.venv
+
+# other
+.vim
+.DS_Store
+dist
+
+# cspell
+.cspellcache

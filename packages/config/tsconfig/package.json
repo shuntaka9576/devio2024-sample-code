@@ -1,0 +1,10 @@
+{
+  "name": "@shuntaka-dev/tsconfig",
+  "type": "module",
+  "scripts": {
+    "lint": "pnpm run /lint:.*/",
+    "lint:check": "biome check .",
+    "lint:spell": "cspell lint . --cache --gitignore",
+    "fix": "biome check . --write"
+  }
+}

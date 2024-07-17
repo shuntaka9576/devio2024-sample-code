@@ -1,0 +1,37 @@
+{
+  "name": "@shuntaka-dev/blog-api",
+  "type": "module",
+  "scripts": {
+    "lint": "pnpm run /lint:.*/",
+    "lint:check": "biome check .",
+    "lint:type": "tsc --noEmit",
+    "lint:spell": "cspell lint . --cache --gitignore",
+    "fix": "biome check . --write",
+    "dev": "dotenvx run -f .env.dev -- tsx watch ./src/utils/lunch/lunch-node.ts",
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "3.609.0",
+    "@aws-sdk/lib-dynamodb": "3.610.0",
+    "@aws-sdk/util-dynamodb": "3.609.0",
+    "@effect/schema": "0.68.18",
+    "@simplewebauthn/server": "10.0.0",
+    "@simplewebauthn/types": "10.0.0",
+    "@types/luxon": "3.4.2",
+    "effect": "3.4.7",
+    "hono": "4.4.12",
+    "hono-sessions": "0.5.8",
+    "luxon": "3.4.4",
+    "pino": "9.2.0",
+    "source-map-support": "0.5.21",
+    "zod": "3.23.8"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-secrets-manager": "3.609.0",
+    "@hono/node-server": "1.12.0",
+    "@testcontainers/localstack": "10.10.1",
+    "@types/node": "20.14.10",
+    "ky": "1.4.0",
+    "vitest": "1.6.0"
+  }
+}

@@ -1,0 +1,5 @@
+packages:
+  - "packages/blog-api"
+  - "packages/blog-web"
+  - "packages/config/*"
+  - "packages/iac"

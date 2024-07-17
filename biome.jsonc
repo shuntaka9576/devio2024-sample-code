@@ -1,0 +1,6 @@
+{
+  "extends": ["packages/config/biome-config/biome.jsonc"],
+  "files": {
+    "ignore": ["packages"]
+  }
+}

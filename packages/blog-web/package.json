@@ -1,0 +1,39 @@
+{
+  "name": "@shuntaka-dev/blog-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "pnpm run /lint:.*/",
+    "lint:check": "biome check .",
+    "lint:type": "tsc --noEmit",
+    "lint:spell": "cspell lint . --cache --gitignore",
+    "fix": "biome check . --write"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "1.1.1",
+    "@radix-ui/react-label": "2.1.0",
+    "@radix-ui/react-slot": "1.1.0",
+    "class-variance-authority": "0.7.0",
+    "clsx": "2.1.1",
+    "lucide-react": "0.400.0",
+    "next": "14.2.4",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "shadcn-ui": "0.8.0",
+    "tailwind-merge": "2.3.0",
+    "tailwindcss-animate": "1.0.7"
+  },
+  "devDependencies": {
+    "@simplewebauthn/browser": "10.0.0",
+    "@simplewebauthn/types": "10.0.0",
+    "@types/node": "20.14.9",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "autoprefixer": "10.4.19",
+    "postcss": "8.4.39",
+    "tailwindcss": "3.4.4"
+  }
+}

@@ -1,0 +1,13 @@
+adoc
+asciidoctor
+docname
+enduml
+imagesdir
+imagesoutdir
+plantuml
+toclevels
+sectlinks
+sectanchors
+startuml
+sectanchors
+outdir

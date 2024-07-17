@@ -1,0 +1,206 @@
+:docname: システム仕様書
+:author: shuntaka9576
+:lang: ja
+:doctype: book
+:icons: font
+:toc: left
+:toc-title: 目次
+:toclevels: 2
+:example-caption: 例
+:table-caption: 表
+:figure-caption: 図
+:chapter-label:
+:sectanchors:
+:sectlinks:
+:imagesdir: ../images
+:imagesoutdir: ../images
+
+
+
+= 共通処理
+
+== サインアップ
+
+[plantuml]
+----
+@startuml
+box "Web" #fff2df
+  participant "shuntaka.dev" as blog
+end box
+box "AWS" #fff2df
+  participant "APIGateway" as apig
+  participant "lambda" as lambda
+  database "パラメーターストア" as db_ps
+  database "User" as db_user
+end box
+activate blog
+blog -> blog: signupを押下
+blog -> blog: サインアップボタンを押下
+blog -> apig: 
+group /api/generate-registration-options
+  activate apig
+  apig -> lambda:
+  activate lambda
+  lambda -> lambda: challengeを生成(generateRegistrationOptions)
+  lambda -> db_ps: セッション暗号化キーを取得
+  activate db_ps
+  db_ps --> lambda: 取得OK
+  deactivate db_ps
+  lambda -> lambda: セッション情報にchallenge,userID,userNameを埋め込み暗号化
+end
+lambda --> apig
+deactivate lambda
+apig --> blog: SetCookie + body
+deactivate apig
+blog -> blog: 認証器で署名生成
+blog -> apig:
+activate apig
+apig -> lambda
+activate lambda
+group /api/verify-registration
+    lambda -> lambda: セッションからchallenge,userID,userNameを取得
+    lambda -> lambda: 署名の検証
+    group トランザクション
+    lambda -> db_user: ユーザー情報を登録
+    activate db_user
+    db_user --> lambda: 登録OK
+    deactivate db_user
+    lambda -> db_user: userIdと認証器情報を登録
+    activate db_user
+    db_user --> lambda: 登録OK
+    deactivate db_user
+  end
+  lambda -> lambda: セッション情報からchallengeを削除
+  lambda -> lambda: セッション情報にuserIdを登録
+end
+lambda --> apig
+deactivate lambda
+apig-->blog
+deactivate apig
+deactivate blog
+@enduml
+----
+
+セッションには以下の情報が含まれ暗号化してセッションIDとなり、Cookieへ保存
+
+[cols="5*", options="header"]
+|===
+|属性名|型|必須|説明|例
+|challenge|string||認証時のみ|
+|userId|string||誰かを判断するのに利用。userIdがない場合は認証しない。|
+|有効期限|string|◯|これはFW側で自動設定|
+|===
+
+* セッション管理は2つあり、前者を採用(hono_sessionsは両方を採用)
+** セッションIDに情報を内包して暗号化する方式
+** セッションIDをDBにもつ方式
+
+* 未検討事項
+** すでにパスキー登録している場合(excludeCredentialsの設定周り)
+
+== ログイン
+
+[plantuml]
+----
+@startuml
+box "Web" #fff2df
+  participant "shuntaka.dev" as blog
+end box
+box "AWS" #fff2df
+  participant "APIGateway" as apig
+  participant "lambda" as lambda
+  database "パラメーターストア" as db_ps
+  database "User" as db_user
+end box
+activate blog
+blog -> apig: /api/generate-authentication-options
+activate apig
+apig -> lambda:
+activate lambda
+group /api/generate-authentication-options
+  lambda -> lambda: challengeを生成(generateRegistrationOptions)
+  lambda -> db_ps: セッション暗号化キーを取得
+  activate db_ps
+  db_ps --> lambda: 取得OK
+  deactivate db_ps
+  lambda -> lambda: セッション情報にchallengeを埋め込み暗号化
+end
+lambda --> apig
+deactivate lambda
+apig --> blog: SetCookie + body
+deactivate apig
+blog -> blog: 認証器で署名生成
+blog -> apig: /api/verify-authentication
+activate apig
+apig -> lambda
+activate lambda
+group verify-authentication
+  lambda -> db_user: 認証器情報(公開鍵)を取得(userHandle)
+  activate db_user
+  db_user --> lambda: 取得OK
+  deactivate db_user
+  lambda -> lambda: 署名の検証
+  lambda -> lambda: セッション生成
+end
+lambda --> apig
+deactivate lambda
+apig --> blog: SetCookie
+deactivate apig
+blog -> blog: 認証器で署名生成
+deactivate blog
+@enduml
+----
+
+= テーブル
+== {env}-User
+
+=== 属性
+
+* userIDとID(userID)の場合、ユーザーの属性を示す
+* userIDとID(credentialID)の場合、ユーザーと認証器の関連を示す
+
+上記の構造により、userHandleからPK=userId検索でユーザー情報と認証器の情報が一括で取得可能
+認証時、userHandleとidで公開鍵を引く
+
+ユーザーレコード
+
+[cols="5*", options="header" options="autowidth"]
+|===
+|属性名|型|必須|説明|例
+|userID|string|◯|shuntaka.devのuserId|505df151-e76a-4ab7-a877-6c6b13558788
+|ID|string|◯|shuntaka.devのuserId|505df151-e76a-4ab7-a877-6c6b13558788
+|userName|string|◯|サービス毎の一意な表示名|shuntaka
+|installationId|string||GitHub Appをインストールしたユーザーの識別子|14849201
+|createdAt|number|◯|作成日時|1613835800889
+|updatedAt|number|◯|更新日時|1613835800889
+|===
+
+ユーザーと認証器のレコード
+
+[cols="5*", options="header" options="autowidth"]
+|===
+|属性名|型|必須|説明|例
+|userID|string|◯|shuntaka.devのuserId|505df151-e76a-4ab7-a877-6c6b13558788
+|ID|string|◯|認証器のID|1IQ6PUxd03Bg9CswFFKQlQ
+|credentialPublicKey|string|◯||
+|counter|string|◯||
+|transports|[]string|◯||
+|createdAt|number|◯|作成日時|1613835800889
+|updatedAt|number|◯|更新日時|1613835800889
+|===
+
+=== パーティションキー
+
+[cols="h,d"]
+|===
+|パーティションキー|userId
+|ソートキー|ID
+|===
+
+=== GSI: userNameIndex
+
+[cols="h,d"]
+|===
+|パーティションキー|userName
+|射影|なし
+|===
